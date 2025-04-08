@@ -13,7 +13,6 @@ function CenteredLayout() {
         <Link to="/login" className="text-white mx-2">Login</Link>
         <Link to="/register" className="text-white mx-2">Register</Link>
       </nav>
-      {/* This container restricts the width */}
       <div className="w-full max-w-md">
         <Outlet />
       </div>
@@ -25,7 +24,7 @@ function App() {
   return (
     <Router>
       <div className="relative min-h-screen">
-        {/* Fixed, radiant background with a radial gradient */}
+        {/* Radiant background with a radial gradient */}
         <div 
           className="absolute inset-0 filter blur-3xl opacity-70" 
           style={{ 
@@ -40,7 +39,7 @@ function App() {
             <Route path="/mfa/:userId" element={<MFA />} />
             <Route path="*" element={<Login />} />
           </Route>
-          {/* Full-width Welcome page */}
+          {/* Welcome page */}
           <Route path="/welcome" element={<Welcome />} />
         </Routes>
       </div>

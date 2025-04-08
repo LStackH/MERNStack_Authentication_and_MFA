@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../api/authApi';
 
 function Login() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/login', credentials);
+      const response = await loginUser(credentials);
       if (response.data.mfaRequired) {
         navigate(`/mfa/${response.data.userId}`);
       } else if (response.data.token) {

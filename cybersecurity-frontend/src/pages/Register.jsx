@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../api/authApi';
 
 function Register() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function Register() {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/register', formData);
+      const response = await registerUser(formData);
       if (response.data.mfaEnabled && response.data.qrCodeData) {
         setQrCode(response.data.qrCodeData);
       } else {

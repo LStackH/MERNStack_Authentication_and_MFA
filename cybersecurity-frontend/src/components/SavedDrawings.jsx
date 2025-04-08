@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getDrawings, deleteDrawing } from '../api/drawingApi';
 
 function SavedDrawings() {
   const [drawings, setDrawings] = useState([]);
@@ -8,9 +8,7 @@ function SavedDrawings() {
   const fetchDrawings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/drawings', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await getDrawings(token);
       setDrawings(response.data.drawings);
     } catch (err) {
       console.error('Error fetching drawings:', err.response?.data || err.message);
@@ -21,12 +19,10 @@ function SavedDrawings() {
     fetchDrawings();
   }, []);
 
-  const deleteDrawing = async (drawingId) => {
+  const removeDrawing = async (drawingId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/drawing/${drawingId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await deleteDrawing(drawingId, token);
       // Update state by removing the deleted drawing
       setDrawings((prev) => prev.filter((d) => d._id !== drawingId));
     } catch (err) {
@@ -41,9 +37,8 @@ function SavedDrawings() {
         {drawings.length > 0 ? (
           drawings.map((drawing) => (
             <div key={drawing._id} className="relative group">
-              {/* Delete Button */}
               <button
-                onClick={() => deleteDrawing(drawing._id)}
+                onClick={() => removeDrawing(drawing._id)}
                 className="absolute top-0 right-0 m-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 ×

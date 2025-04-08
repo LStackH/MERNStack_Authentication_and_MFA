@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import axios from 'axios';
+import { saveDrawing } from '../api/drawingApi';
 
 const colors = ['#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
 
@@ -54,18 +54,13 @@ function DrawingBoard({ onDrawingSaved }) {
   };
 
   // Save the drawing by sending the canvas image data to the backend
-  const saveDrawing = async () => {
-    const canvas = canvasRef.current;
-    const imageData = canvas.toDataURL('image/png');
+  const handleSave = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/drawing',
-        { imageData },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-      );
+      const token = localStorage.getItem('token');
+      const imageData = canvasRef.current.toDataURL('image/png');
+      const response = await saveDrawing(imageData, token);
       console.log('Drawing saved:', response.data);
       alert('Drawing saved successfully!');
-      // Call the callback to trigger a refresh of saved drawings
       if (onDrawingSaved) onDrawingSaved();
     } catch (error) {
       console.error('Error saving drawing:', error.response?.data || error.message);
@@ -111,7 +106,7 @@ function DrawingBoard({ onDrawingSaved }) {
           Clear
         </button>
         <button
-          onClick={saveDrawing}
+          onClick={handleSave}
           className="px-4 py-2 bg-[#1AA125] text-white rounded hover:bg-[#59FF00] transition-colors"
         >
           Save

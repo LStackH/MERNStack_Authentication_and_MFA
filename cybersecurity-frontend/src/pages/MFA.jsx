@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { verifyMFA } from '../api/authApi';
 
 function MFA() {
   const { userId } = useParams();
@@ -12,7 +12,7 @@ function MFA() {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/mfa/verify', { userId, token });
+      const response = await verifyMFA({ userId, token });
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         navigate('/welcome');

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getUser } from '../api/userApi';
 import Navbar from '../components/Navbar';
 import DrawingBoard from '../components/DrawingBoard';
 import SavedDrawings from '../components/SavedDrawings';
@@ -14,18 +14,13 @@ function Welcome() {
     if (!token) {
       navigate('/login');
     } else {
-      axios.get('http://localhost:3000/user', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(response => {
-        setUser(response.data.user);
-      })
-      .catch(err => {
-        console.error("Error fetching user info:", err.response?.data || err.message);
-        navigate('/login');
-      });
+      getUser(token)
+        .then(response => {
+          setUser(response.data.user);
+        })
+        .catch(err => {
+          navigate('/login');
+        });
     }
   }, [navigate]);
 
